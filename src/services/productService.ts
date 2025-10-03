@@ -5,7 +5,8 @@ export const getAllProducts = async () => {
 };
 
 export const seedInitialProducts = async () => {
-    const products = [
+    try{
+        const products = [
        {title: "Dell Laptop" , image: "https://th.bing.com/th/id/OIP.6f1SuqpxXrIJWcRPDK6UBwHaFj?w=231&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" , price: 15000 , stock: 10},
       // {title: "product 2" , image: "image2.jpg" , price: 20 , stock: 80},
       // {title: "product 3" , image: "image3.jpg" , price: 15 , stock: 50},
@@ -23,4 +24,8 @@ export const seedInitialProducts = async () => {
     if(existingProducts.length === 0){
         await productModel.insertMany(products)
     }
+    }catch(err){
+        console.error("cannot seed database", err);
+    }
+    
 };

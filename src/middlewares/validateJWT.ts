@@ -22,7 +22,7 @@ const validateJWT = (req : ExtendRequest, res : Response, next : NextFunction) =
          return;
       }
 
-    jwt.verify(token,"d97617ac42127dd1549c3086aef36f2fb570e302c785f963256f2b7503a49ac9",async (err, payload)=> {  // verify that token = the secret key that we genarate with jwt.sign function in  userservices.ts
+    jwt.verify(token, process.env.JWT_SECRET || '',async (err, payload)=> {  // verify that token = the secret key that we genarate with jwt.sign function in  userservices.ts
          if(err){
             res.status(403).send("Invalid token"); 
            return;
