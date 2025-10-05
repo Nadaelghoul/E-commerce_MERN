@@ -5,6 +5,7 @@ import  TextField  from "@mui/material/TextField";
 import  Button  from "@mui/material/Button";
 import { useRef, useState } from "react";
 import { BASE_URL } from "../constats/baseUrl";
+import { useAuth } from "../context/Auth/AuthContext";
 
 const RegisterPage = () => {
     
@@ -15,11 +16,19 @@ const RegisterPage = () => {
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
+    const {login} = useAuth(); // in AuthContext
+
+
     const onSubmit = async () => {
         const firstName = firstNameRef.current?.value;
         const lastName = lastNameRef.current?.value;
         const email =  emailRef.current?.value;
         const password =  passwordRef.current?.value;
+
+         if(!firstName || !lastName || !email || !password){
+            setError("check submitted data")
+            return;
+         }
 
         // make the call to Api to create the user
         const response = await fetch(`${BASE_URL}/user/register`, {
@@ -34,7 +43,13 @@ const RegisterPage = () => {
             setError(" Unable to register user, please try different credientials!");
             return;
         }
-      const data = await response.json();
+      const token = await response.json();
+      
+      if(!token){
+        setError("Incorrect Token!")
+        return;
+      }
+      login(email, token)
     };
 
    return(
