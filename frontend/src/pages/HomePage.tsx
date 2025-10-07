@@ -21,7 +21,7 @@ const HomePage = () => {
        <Container sx={{ mt: 2 }}>
         <Box display="grid"  gridTemplateColumns="repeat(3, 1fr)"  gap={2} >
         {products.map((p)=> (
-           <ProductCard   id= {p._id} title= {p.title}  price={p.price}  image={p.image}/>
+           <ProductCard   _id= {p._id} title= {p.title}  price={p.price}  image={p.image}/>
         ))}
       </Box>
     </Container>
