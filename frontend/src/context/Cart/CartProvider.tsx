@@ -6,7 +6,7 @@ import { useAuth } from "../Auth/AuthContext";
 
 const CartProvider : FC<PropsWithChildren> = ({children}) => {
       const {token} = useAuth();
-      const [cartItems, setCartItems] = useState<CartItem>([]);
+      const [cartItems, setCartItems] = useState<CartItem[]>([]);
       const [totalAmount, setTotalAmount] = useState<number>(0);
       const [error, setError] = useState('');
 
@@ -25,6 +25,7 @@ const CartProvider : FC<PropsWithChildren> = ({children}) => {
             setError("failed to fetch user cart. please try again");
         }
         const cart = await response.json();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cartItemsMapped = cart.items.map(({product, quantity, unitPrice}:{product: any; quantity: number; unitPrice: number;}) => ({productId: product._id, title: product.title, image: product.image, quantity, unitPrice }))
         setCartItems([...cartItemsMapped]);
         setTotalAmount(cart.totalAmount);
@@ -58,8 +59,34 @@ const CartProvider : FC<PropsWithChildren> = ({children}) => {
         }
       }
 
+      const updateItemInCart = async(productId: string, quantity: number) =>{
+           try{
+           const response = await fetch(`${BASE_URL}/cart/items`,{
+            method: "PUT",
+            headers:{"Content-Type" : "application/json", Authorization: `Bearer ${token}`},
+            body: JSON.stringify({productId, quantity }),
+           });
+
+           if(!response.ok){
+            setError('failed to update cart');
+           }
+            const updatedCart = await response.json();
+             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+             setCartItems(updatedCart.items.map(({ product, quantity, unitPrice }: any) => ({
+            productId: product._id,
+             title: product.title,
+            image: product.image,
+            quantity,
+          unitPrice,
+         })));
+    setTotalAmount(updatedCart.totalAmount);
+        }catch(error){
+            console.error(error);
+        }
+      }
+
       return(
-        <CartContext.Provider value={{  cartItems, totalAmount, addItemToCart}}>
+        <CartContext.Provider value={{cartItems, totalAmount, addItemToCart, updateItemInCart}}>
             {children}
         </CartContext.Provider>
       )

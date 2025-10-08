@@ -6,7 +6,20 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 
 const CartPage =  () => {
     
-    const {cartItems, totalAmount} = useCart();
+    const {cartItems, totalAmount, updateItemInCart} = useCart();
+
+    const handleQuantity = (productId: string, quantity: number) => {
+        if(quantity <= 0){
+            return;
+        }
+         updateItemInCart(productId, quantity)
+    }
+
+    const handleRemoveItem  = (productId: string) => {
+          deleteItemInCart()
+    }
+
+    
 
 
     return (
@@ -14,18 +27,18 @@ const CartPage =  () => {
           <Typography variant="h4">My Cart</Typography>
           <Box display="flex" flexDirection="column"  gap={4}>
           {cartItems.map((item) => (
-            <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" sx={{border:1, borderColor:"#f2f2f2", borderRadius: 5, padding:1}}>
+            <Box   key={item.productId} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" sx={{border:1, borderColor:"#f2f2f2", borderRadius: 5, padding:1}}>
              <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
              <img src={item.image} width={50} />
              <Box>
              <Typography variant="h6">{item.title}</Typography> 
              <Typography>{item.quantity} x {item.unitPrice} EGP</Typography>
-             <Button>REMOVE ITEM</Button>
+             <Button onClick={()=> handleRemoveItem(item.productId)}>REMOVE ITEM</Button>
              </Box>
              </Box> 
              <ButtonGroup variant="contained" aria-label="Basic button group">
-             <Button>-</Button>
-             <Button>+</Button>
+             <Button onClick={()=> handleQuantity(item.productId, item.quantity -1)}>-</Button>
+             <Button onClick={()=> handleQuantity(item.productId, item.quantity +1)}>+</Button>
             </ButtonGroup>
             </Box>
           ))}
