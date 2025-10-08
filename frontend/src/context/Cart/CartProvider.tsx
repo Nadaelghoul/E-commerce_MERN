@@ -1,4 +1,4 @@
-import {  useState, type FC, type PropsWithChildren } from "react";
+import {  useEffect, useState, type FC, type PropsWithChildren } from "react";
 import { CartContext } from "./CartContext";
 import type { CartItem } from "../../types/CartItem";
 import { BASE_URL } from "../../constats/baseUrl";
@@ -9,6 +9,31 @@ const CartProvider : FC<PropsWithChildren> = ({children}) => {
       const [cartItems, setCartItems] = useState<CartItem>([]);
       const [totalAmount, setTotalAmount] = useState<number>(0);
       const [error, setError] = useState('');
+
+       useEffect(() => {
+        if(!token){
+            return;
+        }
+
+       const fetchCart = async () => {
+       const response = await fetch(`${BASE_URL}/cart`, {
+            headers:{
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if(!response.ok){
+            setError("failed to fetch user cart. please try again");
+        }
+        const cart = await response.json();
+        const cartItemsMapped = cart.items.map(({product, quantity}:{product: any; quantity: number}) => ({productId: product._id, title: product.title, image: product.image, quantity, unitPrice: product.unitPrice }))
+        setCartItems([...cartItemsMapped]);
+        setTotalAmount(cart.totalAmount);
+        setCartItems(cartItemsMapped);
+       };
+
+       fetchCart();
+    },[token]);
+
 
       const addItemToCart = async (productId: string) => {
         try{
@@ -28,9 +53,6 @@ const CartProvider : FC<PropsWithChildren> = ({children}) => {
            if(!cart){
             setError("failed to parse cart data!")
            }
-           const cartItemsMapped = cart.items.map(({product, quantity}:{product: any; quantity: number}) => ({productId: product._id, title: product.title, image: product.image, quantity, unitPrice: product.unitPrice }))
-           setCartItems([...cartItemsMapped]);
-           setTotalAmount(cart.totalAmount);
         }catch(error){
             console.error(error);
         }
