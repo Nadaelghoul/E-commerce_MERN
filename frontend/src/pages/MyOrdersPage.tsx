@@ -1,6 +1,4 @@
-import { CheckCircleOutline } from "@mui/icons-material";
-import { Box, Button, Container, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Container, Typography } from "@mui/material";
 import { useAuth } from "../context/Auth/AuthContext";
 import { useEffect } from "react";
 
