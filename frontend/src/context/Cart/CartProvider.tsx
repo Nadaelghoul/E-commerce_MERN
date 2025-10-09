@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {  useEffect, useState, type FC, type PropsWithChildren } from "react";
 import { CartContext } from "./CartContext";
 import type { CartItem } from "../../types/CartItem";
