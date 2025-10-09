@@ -62,6 +62,7 @@ const LoginPage = () => {
         <Button variant="contained"  onClick={onSubmit}> Login</Button>
         {error && <Typography sx={{color: "red"}}>{error}</Typography>}
        </Box >
+        <Button onClick={()=> navigate("/register")} sx={{ml:20}}>Register</Button>
        </Box>
       </Container>
    );

@@ -18,7 +18,7 @@ export default function ProductCard({ _id,title, image, price}: props) {
  const {addItemToCart} = useCart();
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345, mb:2 }}>
       <CardMedia
         component="img"
         alt="green iguana"
